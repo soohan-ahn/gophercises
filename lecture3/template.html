@@ -1,0 +1,9 @@
+<html>
+<title>{{.Title}}</title>
+<h1>{{.StoryArc.Title}}</h1>
+{{.StoryArc.Story}}
+<br><br><br><br>
+{{ range $key, $value := .StoryArc.Options }}
+<a href = "http://localhost:8080/{{.Arc}}">{{.Text}}</a><br>
+{{ end }}
+</html>
