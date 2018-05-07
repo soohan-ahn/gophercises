@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"golang.org/x/net/html"
+	"io"
 	"os"
 	"strings"
 )
@@ -12,14 +13,8 @@ type Link struct {
 	Text string
 }
 
-func main() {
-	//r, err := ioutil.ReadFile(os.Args[1])
-	r, err := os.Open(os.Args[1])
-	if err != nil {
-		panic(err)
-	}
-	z := html.NewTokenizer(r)
-
+func RetrieveAllLinks(f io.ReadCloser) []Link {
+	z := html.NewTokenizer(f)
 	var result []Link
 	for {
 		t := z.Next()
@@ -55,6 +50,18 @@ func main() {
 			result = append(result, l)
 		}
 	}
+
+	return result
+}
+
+func main() {
+	//r, err := ioutil.ReadFile(os.Args[1])
+	r, err := os.Open(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+
+	result := RetrieveAllLinks(r)
 	for i, _ := range result {
 		fmt.Printf("HREF: %s\nText: %s\n\n", result[i].Href, result[i].Text)
 	}
