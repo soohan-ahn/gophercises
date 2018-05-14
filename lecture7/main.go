@@ -87,6 +87,24 @@ func Incompleted(c *cli.Context) error {
 	return List(c, "TODO")
 }
 
+func Remove(c *cli.Context) error {
+	db := Database()
+	args := strings.Join(c.Args(), " ")
+	db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("TASK"))
+		v := b.Get([]byte(args))
+		if string(v) == "TODO" {
+			err := b.Delete([]byte(args))
+			if err != nil {
+				fmt.Errorf("error: %v", err)
+			}
+		}
+
+		return nil
+	})
+	return nil
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "task"
@@ -111,6 +129,11 @@ func main() {
 			Name:   "completed",
 			Usage:  "List all of your complete tasks.",
 			Action: Completed,
+		},
+		{
+			Name:   "rm",
+			Usage:  "Remove an your task.",
+			Action: Remove,
 		},
 	}
 	app.Run(os.Args)
