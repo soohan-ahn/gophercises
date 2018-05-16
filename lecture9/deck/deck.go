@@ -2,6 +2,7 @@ package deck
 
 import (
 	"fmt"
+	"math/rand"
 	"sort"
 	"strconv"
 )
@@ -47,6 +48,14 @@ func (d Deck) Less(i, j int) bool {
 	return iNumeric < jNumeric
 }
 
+func (d Deck) Shuffle() {
+	n := len(d)
+	for i := n - 1; i >= 0; i-- {
+		j := rand.Intn(i + 1)
+		d.Swap(i, j)
+	}
+}
+
 func (d Deck) AllCards() {
 	for i, _ := range d {
 		fmt.Printf("%s %s\n", d[i].Suit, d[i].Numeric)
@@ -75,9 +84,4 @@ func New() Deck {
 
 	sort.Sort(cards)
 	return cards
-}
-
-func main() {
-	cards := New()
-	cards.AllCards()
 }
