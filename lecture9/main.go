@@ -12,4 +12,9 @@ func main() {
 	cards.Shuffle()
 	fmt.Println("After Shuffle")
 	cards.AllCards()
+
+	card, cards := cards.Pop()
+	fmt.Printf("Dealers Card: %s %s, *\n", card.Suit, card.Numeric)
+
+	cards.AllCards()
 }

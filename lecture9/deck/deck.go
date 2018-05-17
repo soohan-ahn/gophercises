@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type Card struct {
@@ -20,10 +21,10 @@ var SuitMap = map[string]int{
 }
 
 var NumericMap = map[string]int{
-	"A": 1,
-	"J": 11,
-	"Q": 12,
-	"K": 13,
+	"A": 11,
+	"J": 10,
+	"Q": 10,
+	"K": 10,
 }
 
 type Deck []Card
@@ -45,11 +46,16 @@ func (d Deck) Less(i, j int) bool {
 	if err != nil {
 		jNumeric = NumericMap[d[j].Numeric]
 	}
-	return iNumeric < jNumeric
+	if iNumeric != jNumeric {
+		return iNumeric < jNumeric
+	}
+
+	return d[i].Numeric < d[j].Numeric
 }
 
 func (d Deck) Shuffle() {
 	n := len(d)
+	rand.Seed(time.Now().Unix())
 	for i := n - 1; i >= 0; i-- {
 		j := rand.Intn(i + 1)
 		d.Swap(i, j)
@@ -60,6 +66,12 @@ func (d Deck) AllCards() {
 	for i, _ := range d {
 		fmt.Printf("%s %s\n", d[i].Suit, d[i].Numeric)
 	}
+}
+
+func (d Deck) Pop() (Card, Deck) {
+	card := d[0]
+	d = d[1:]
+	return card, d
 }
 
 func New() Deck {
